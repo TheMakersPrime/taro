@@ -1,0 +1,17 @@
+version: '3'
+
+silent: true
+
+includes:
+  print:
+    taskfile: ./tasks/print.yaml
+    flatten: true
+  gen-key:
+    taskfile: ./tasks/genkey.yaml
+    flatten: true
+  theme:
+    taskfile: ./tasks/theme.yaml
+    flatten: true
+
+
+  

@@ -1,0 +1,44 @@
+version: '3'
+
+silent: true
+
+tasks:
+  gen-key:
+    aliases: [ genkey ]
+    requires:
+      vars:
+        - name: flavor
+        - name: name
+        - name: type
+    vars:
+      org: '{{.org | default "<org>"}}'
+      validity: '{{.validity | default 9125}}'
+      password: '{{ .name }}{{ .flavor }}{{ .type }}'
+      alias: '{{ .name }}_{{ .flavor }}_{{ .type }}'
+      file: '{{ .name }}_{{ .flavor }}_{{ .type }}_key.jks'
+      content: |
+        # Copyright (c) $(date +'%Y') {{ .org }} Authors. All rights reserved.
+        storePassword={{ .password }}
+        keyPassword={{ .password }}
+        keyAlias={{ .alias }}
+        storeFile={{ .file }}
+    cmds:
+      - task: print
+        vars: { msg: "Generating key [{{ .name }}_{{ .flavor }}_{{ .type }}_key.jks]", state: "info" }
+      - |
+        path=~/jks_keys/{{ .name }}/{{ .type }}/{{.flavor}}
+
+        mkdir -p "$path"
+        echo "{{ .content }}" > "$path/key.properties"
+
+        keytool -genkeypair \
+          -v \
+          -keystore "$path/{{ .file }}" \
+          -storepass "{{ .password }}" \
+          -keypass "{{ .password }}" \
+          -storetype PKCS12 \
+          -keyalg RSA \
+          -keysize 2048 \
+          -validity {{ .validity }} \
+          -alias "{{ .alias }}" \
+          -dname "CN=Ishwor Shrestha"

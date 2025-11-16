@@ -1,0 +1,28 @@
+version: '3'
+
+silent: true
+
+tasks:
+  print:
+    requires:
+      vars:
+        - name: msg
+    cmds:
+      - |
+        case "{{ .state }}" in
+          success)
+            echo -e "\033[32m{{ .msg }}\033[0m"
+            ;;
+          error)
+            echo -e "\033[31m{{ .msg }}\033[0m"
+            ;;
+          info)
+            echo -e "\033[34m{{ .msg }}\033[0m"
+            ;;
+          warning)
+            echo -e "\033[33m{{ .msg }}\033[0m"
+            ;;
+          *)
+            echo "{{ .msg }}"
+            ;;
+        esac

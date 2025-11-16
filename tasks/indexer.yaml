@@ -1,0 +1,13 @@
+version: '3'
+
+silent: true
+
+tasks:
+  indexer:
+    vars:
+      path: '/Users/E01051-ISHWOR/wordle/wordle.txt'
+      cmds:
+      - task: print
+        vars: { msg: "Indexing words", state: "info" }
+      - |
+        

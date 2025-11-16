@@ -1,0 +1,17 @@
+version: '3'
+
+silent: true
+
+tasks:
+  theme:
+    aliases: [ theme ]
+    requires:
+      vars:
+        - name: path
+    cmds:
+      - task: print
+        vars: { msg: "Generating Theme" }
+      - |
+        schemes=$(jq '.schemes.light' "{{ .path }}")
+
+        echo "$schemes"
