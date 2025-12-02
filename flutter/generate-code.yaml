@@ -2,10 +2,10 @@ version: '3'
 
 tasks:
   generate-code:
+    dir: '{{ .dir }}'
     requires:
       vars:
         - name: dir
-    dir: {{ .dir }}
     vars:
       watch: '{{.watch | default false}}'
     cmds:
