@@ -1,0 +1,21 @@
+version: '3'
+
+tasks:
+  generate-code:
+    requires:
+      vars:
+        - name: dir
+    dir: {{ .dir }}
+    vars:
+      watch: '{{.watch | default false}}'
+    cmds:
+      - task: :print
+        vars: { msg: 'Generating code', state: 'info' }
+      # Run build_runner
+      - |
+        pwd
+        if [ "{{.watch}}" = true ]; then
+          dart run build_runner watch -d
+        else
+          dart run build_runner build -d
+        fi
