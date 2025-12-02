@@ -13,6 +13,7 @@ tasks:
         vars: { msg: 'Generating code', state: 'info' }
       # Run build_runner
       - |
+        git rev-parse --show-toplevel 2>/dev/null || echo "not a git repo"
         pwd
         if [ "{{.watch}}" = true ]; then
           dart run build_runner watch -d
