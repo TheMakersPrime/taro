@@ -1,0 +1,84 @@
+version: '3'
+
+silent: true
+
+tasks:
+  build:
+    aliases: [ build ]
+    dir: '{{ .USER_WORKING_DIR}}/{{ .dir }}'
+    requires:
+      vars:
+        - name: type
+        - name: dir
+    vars:
+      shrink: '{{.shrink | default true}}'
+      split: '{{.split | default false}}'
+      shake_icons: '{{.shake_icons | default true}}'
+      enable_debug: '{{.enable_debug | default false}}'
+      open: '{{.open | default false}}'
+      flavor: '{{.flavor | default ""}}'
+      dart_define: '{{.dart_define | default ""}}'
+      dart_define_file: '{{.dart_define_file | default ""}}'
+    cmds:
+      - |
+        flags+=({{ .type }})
+
+        if [ "{{ .enable_debug }}" = false ]; then
+          flags+=(--release)
+        fi
+
+        if [ -n "{{ .flavor }}" ]; then
+          flags+=(--flavor {{ .flavor }} )
+        fi
+
+        flags+=(--build-number=$(task taro:build-number))
+
+        if [ "{{ .shrink }}" = false ]; then
+          flags+=(--no-shrink)
+        fi
+
+        if [ "{{ .shake_icons }}" = false ]; then
+          flags+=(--no-tree-shake-icons)
+        fi
+
+        if [[ "{{ .type }}" = apk && "{{ .split }}" = true ]]; then
+          flags+=(--split-per-abi)
+        fi
+
+        if [ -n "{{ .dart_define }}" ]; then
+          echo "{{ .dart_define }}" \
+            | tr ',' '\n' \
+            | while read item; do
+                flags+=(--dart-define="$item")
+              done
+        fi
+
+        if [ -n "{{ .dart_define_file }}" ]; then
+          echo "{{ .dart_define_file }}" \
+            | tr ',' '\n' \
+            | while read item; do
+                flags+=(--dart-define-from-file="\"$item\"")
+              done
+        fi
+
+        options=$(IFS=' '; echo "${flags[*]}")
+
+        cmd="flutter build $options"
+
+        echo "$cmd"
+
+        eval $cmd
+
+        if [ "{{ .open }}" = true ]; then
+          case "{{ .type }}" in
+            ipa)
+              open "build/ios/archive/"
+              ;;
+            apk)
+              open "build/app/outputs/flutter-apk/"
+              ;;
+            appbundle)
+              open "build/app/outputs/bundle/"
+              ;;
+          esac
+        fi
