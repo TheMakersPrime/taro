@@ -1,0 +1,11 @@
+version: '3'
+
+silent: true
+
+tasks:
+  format:
+    cmds:
+      - task: :print
+        vars: { msg: 'Formatting all the dart code in the project.', state: 'info' }
+      - |
+        dart format . -l 140
