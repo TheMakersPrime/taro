@@ -2,7 +2,7 @@ version: '3'
 
 tasks:
   generate-code:
-    dir: '{{ .USER_WORKING_DIR}}/{{ .dir }}'
+    dir: '{{ .ROOT_DIR}}/{{ .dir }}'
     requires:
       vars:
         - name: dir

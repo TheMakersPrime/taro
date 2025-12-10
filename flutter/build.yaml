@@ -5,7 +5,7 @@ silent: true
 tasks:
   build:
     aliases: [ build ]
-    dir: '{{ .USER_WORKING_DIR}}/{{ .dir }}'
+    dir: '{{ .ROOT_DIR }}/{{ .dir }}'
     requires:
       vars:
         - name: type

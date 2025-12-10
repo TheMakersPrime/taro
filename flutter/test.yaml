@@ -4,7 +4,7 @@ silent: true
 
 tasks:
   test:
-    dir: '{{ .USER_WORKING_DIR}}/{{ .dir }}'
+    dir: '{{ .ROOT_DIR }}/{{ .dir }}'
     requires:
       vars:
         - name: dir
