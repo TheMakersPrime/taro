@@ -1,0 +1,41 @@
+version: '3'
+
+silent: true
+
+tasks:
+  test:
+    dir: '{{ .USER_WORKING_DIR}}/{{ .dir }}'
+    requires:
+      vars:
+        - name: dir
+    vars:
+      coverage: '{{.coverage | default false}}'
+      path: '{{.path | default ""}}'
+      id: '{{.id | default ""}}'
+    cmds:
+      - |
+        options="--reporter expanded --no-pub"
+
+        path="test/{{ .path }}"
+
+        if [ -n "{{ .id }}" ]; then
+          id=$(echo "{{ .id }}" | sed 's/,/:|/g; s/$/:/')
+          options+=" --name=\"$id\""
+        fi
+
+        if [ "{{ .coverage }}" = true ]; then
+          options+=" --coverage"
+        fi
+
+        task taro:print msg="Running tests in $path" state="info"
+
+        cmd="flutter test $options $path"
+
+        echo "$cmd"
+
+        eval $cmd
+
+        if [ "{{ .coverage }}" = true ]; then
+          genhtml coverage/lcov.info -o coverage/html --exclude '*.g.dart'
+          open coverage/html/index.html
+        fi

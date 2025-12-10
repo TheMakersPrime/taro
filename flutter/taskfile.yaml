@@ -3,6 +3,15 @@ version: '3'
 silent: true
 
 includes:
+  build:
+    taskfile: build.yaml
+    flatten: true
+  format:
+    taskfile: formatter.yaml
+    flatten: true
   generate-code:
     taskfile: generate-code.yaml
+    flatten: true
+  test:
+    taskfile: test.yaml
     flatten: true
