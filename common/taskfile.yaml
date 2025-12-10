@@ -4,3 +4,6 @@ includes:
   print:
     taskfile: print.yaml
     flatten: true
+  build-number:
+    taskfile: build-number-generator.yaml
+    flatten: true
